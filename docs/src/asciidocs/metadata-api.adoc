@@ -207,6 +207,7 @@ https://<ThoughtSpot-host>/callosum/v1/tspublic/v1/metadata/listobjectheaders?ty
 |===
 
 ---
+[#headers-metadata-users]
 == Get metadata objects for a user or user group
 
 Use the `/tspublic/v1/metadata/listas` API to get a list of metadata objects available for a user or user group. 

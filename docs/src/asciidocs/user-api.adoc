@@ -140,6 +140,7 @@ https://<ThoughtSpot-host>/callosum/v1/tspublic/v1/user/updatepassword
 |===
 
 ---
+[#updatepreference-api]
 == Update a user profile
 To update the profile settings of a ThoughtSpot user  programmatically, you can use the `/tspublic/v1/user/updatepreference` API. 
 
