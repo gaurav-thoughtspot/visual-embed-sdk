@@ -274,7 +274,7 @@ Register event handlers to subscribe to events triggered by the embedded visuali
  pinboardEmbed.on(EmbedEvent.Error)
 ----
 
-If you have added a xref:customize-actions-menu.adoc[custom action], register the event handler to manage the events triggered by the custom action:
+If you have added a xref:customize-actions-menu.adoc[custom action], register an event handler to manage the events triggered by the custom action:
 
 [source, javascript]
 ----

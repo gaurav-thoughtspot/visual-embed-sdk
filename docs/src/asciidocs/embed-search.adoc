@@ -264,7 +264,7 @@ Register event handlers to subscribe to embed events triggered by the ThoughtSpo
  searchEmbed.on(EmbedEvent.load, hideLoader)
  searchEmbed.on(EmbedEvent.Error)
 ----
-If you have added a xref:customize-actions-menu.adoc[custom action], register event handler to manage the events triggered by the custom action:
+If you have added a xref:customize-actions-menu.adoc[custom action], register an event handler to manage the events triggered by the custom action:
 
 [source, javascript]
 ----
