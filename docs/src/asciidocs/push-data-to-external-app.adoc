@@ -7,21 +7,22 @@
 
 ThoughtSpot allows you to create custom actions to push data to a third-party application from the ThoughtSpot application context. 
 
-You can add a custom action as a primary button or as a menu item in the *More* menu image:./images/icon-more-10px.png[the more options menu] on the *Answers* or *Pinboards* page. You can configure this custom menu item to initiate an action or callback to a parent application. 
+You can add a custom action as a primary button or as a menu item in the *More* menu image:./images/icon-more-10px.png[the more options menu] on the *Answers* or *Pinboards* page. 
+You can configure this custom menu item to initiate an action or a callback to the parent application.
 For example, if you have embedded the ThoughtSpot search functionality in your application, you can add a custom menu item in the *Answers* page to send the search answer data to an external application or a workflow.  
 //// 
 You can also use the REST APIs to query data and automatically trigger the custom action workflow.   
 //// 
 [NOTE]
-The data is available to the external application in the JSON (JavaScript Object Notation) format. You must parse the JSON data to get the values you need using JavaScript in the receiving application.
+The data is available to the external application in the JavaScript Object Notation (JSON) format. You must parse the JSON data to get the values you need using JavaScript in the receiving application.
 
 == Push data to an external app using a callback custom action
 To push data to an external app through a callback custom action, follow these steps:
 
 * xref:push-data-external-app.adoc#add-callback[Add a callback custom action in ThoughtSpot]
-* xref:push-data-external-app.adoc#register-callback[Register the custom action in the SDK]
+* xref:push-data-external-app.adoc#register-callback[Register the custom action]
 * xref:push-data-external-app.adoc#callback-initiate[Initiate a callback]
-* xref:push-data-external-app.adoc#handle-data[Define classes and functions to handle the  custom action data]
+* xref:push-data-external-app.adoc#handle-data[Define classes and functions to handle custom action data]
 
 [#add-callback]
 === Add a callback custom action in the ThoughtSpot
@@ -30,15 +31,15 @@ You can create a custom action in the ThoughtSpot to register a callback for sen
 For more information, see xref:customize-actions-menu.adoc#callback[Configure a callback custom action].
 
 [#register-callback]
-=== Register the callback event through the Visual Embed SDK
+=== Register the callback through the Visual Embed SDK
 
-Register for the callback in the Visual Embed SDK. This configuration is required to trigger an event when the custom action is initiated. 
+Register the callback using the Visual Embed SDK. This configuration is required to trigger an event when the custom action is initiated.
 
-The following example shows how to register for the `showData` callback in the `SearchEmbed` SDK.
+The following example shows how to call `showData` when a custom action is received.
 
 [source, Javascript]
 ----
- const embed = new SearchEmbed('#embed', {
+ const searchEmbed = new SearchEmbed('#embed', {
    frameParams: {},
  });
 
@@ -51,22 +52,21 @@ The following example shows how to register for the `showData` callback in the `
 [#callback-initiate]
 === Initiate the callback action
 Define the function and classes to handle the data that you want to send as a payload when a custom action is triggered.
-
-For example, if the HTML page has an element with the ID as `show-data` (the callback ID), and it contains a table with the data triggered from the custom action, you can define the classes and functions to handle the details of this data as shown here:
+This example shows how to handle the `show-data` callback custom action and the details of its data:
 
 [source, Javascript]
 ----
  const showData = (payload) => {
   const data = payload.data;
-  if (data.id === 'show-data' || data.id === 'show-context-data') {
-    // For either action, simply display the data as a table.
+  if (data.id === 'show-data') {
+    // Display the data as a table.
     const actionData = ActionData.createFromJSON(payload);
   
     const html = actionDataToHTML(actionData);
     const dataContentElement = document.getElementById('modal-data-content');
     dataContentElement.innerHTML = html;
 
-    const dataElement = document.getElementById('show-data');
+    const dataElement = document.getElementById('callback-data');
     dataElement.style.display = 'block';
   }
   else {
@@ -75,7 +75,7 @@ For example, if the HTML page has an element with the ID as `show-data` (the cal
  }
 ----
 [#handle-data]
-==== Define functions and classes for handling custom action data
+==== Define functions and classes to handle custom action data
 The following code snippet shows the sample classes and functions for handling custom action data:
 
 [source, Javascript]
