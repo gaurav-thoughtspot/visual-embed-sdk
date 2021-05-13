@@ -67,7 +67,7 @@ The custom menu item is indicated with a custom tag to distinguish it from the d
 [#callback]
 == Configure a callback custom action
 
-The callback custom action provides you with the flexibility to programmatically set up a function to request a callback to the parent application. For example, if you want to push insights from ThoughtSpot into your app or trigger an event to an external application, you can add a custom action for callback in ThoughtSpot. When the user clicks this action on the *Answers* or *Pinboards* page, it initiates a callback to the parent application. 
+The callback custom action provides you with the flexibility to programmatically set up a callback function from the parent application, which triggers on the click of a custom action. For example, if you want to push insights from ThoughtSpot into your app or trigger an event to an external application, you can add a custom action in Thoughtspot and set up a callback in the parent application. When the user clicks this action on the *Answers* or *Pinboards* page, it initiates a callback to the parent application.
 
 To add a callback custom action:
 
