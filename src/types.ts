@@ -403,3 +403,18 @@ export enum Action {
     Separator = 'context-menu-item-separator',
     DrillDown = 'DRILL',
 }
+
+export interface SessionInterface {
+    sessionId: string;
+    genNo: number;
+    acSession: { sessionId: string; genNo: number };
+}
+
+export const OperationType = {
+    GetChartWithData: 'GetChartWithData',
+    GetTableWithHeadlineData: 'GetTableWithHeadlineData',
+};
+
+export interface AnswerServiceType {
+    getAnswer?: (offset: number, batchSize: number) => any;
+}
