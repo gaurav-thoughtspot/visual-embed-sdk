@@ -24,6 +24,7 @@ import {
     AuthType,
     Action,
     RuntimeFilter,
+    OperationType,
 } from '../types';
 import { authenticate, isAuthenticated } from '../auth';
 import {
@@ -31,6 +32,7 @@ import {
     uploadMixpanelEvent,
     MIXPANEL_EVENT,
 } from '../mixpanel-service';
+import FetchAnswers from '../utils/fetchAnswers';
 
 let config = {} as EmbedConfig;
 
@@ -233,10 +235,34 @@ export class TsEmbed {
     private subscribeToEvents() {
         window.addEventListener('message', (event) => {
             const eventType = this.getEventType(event);
-            if (event.source === this.iFrame.contentWindow) {
+            if (
+                event.data.type === 'customAction' &&
+                [
+                    OperationType.GetChartWithData,
+                    OperationType.GetTableWithHeadlineData,
+                ].includes(event.data.data?.operation)
+            ) {
+                this.initFetchAnswerPayload(eventType, event);
+            } else if (event.source === this.iFrame.contentWindow) {
                 this.executeCallbacks(eventType, event.data);
             }
         });
+    }
+
+    private initFetchAnswerPayload(
+        eventType: EmbedEvent,
+        event: MessageEvent<any>,
+    ) {
+        const { session, query, operation } = event.data.data;
+        const newEvent = event;
+        const fetchAnswer = FetchAnswers(
+            session,
+            query,
+            operation,
+            this.thoughtSpotHost,
+        );
+        newEvent.data.answerService = fetchAnswer;
+        this.executeCallbacks(eventType, newEvent.data);
     }
 
     /**

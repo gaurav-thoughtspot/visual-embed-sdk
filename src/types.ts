@@ -407,3 +407,18 @@ export enum Action {
     DrillDown = 'DRILL',
     RequestAccess = 'requestAccess',
 }
+
+export interface SessionInterface {
+    sessionId: string;
+    genNo: number;
+    acSession: { sessionId: string; genNo: number };
+}
+
+export const OperationType = {
+    GetChartWithData: 'GetChartWithData',
+    GetTableWithHeadlineData: 'GetTableWithHeadlineData',
+};
+
+export interface AnswerServiceType {
+    getAnswer?: (offset: number, batchSize: number) => any;
+}
