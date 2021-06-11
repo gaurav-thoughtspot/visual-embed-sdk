@@ -16,6 +16,7 @@ function FetchAnswers(
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json;charset=UTF-8',
+                        'x-requested-by': 'ThoughtSpot',
                         accept: '*/*',
                         'accept-language': 'en-us',
                     },
@@ -24,13 +25,13 @@ function FetchAnswers(
                         query,
                         variables,
                     }),
-                    credentials: 'include',
+                    credentials: 'include'
                 },
             );
             const result = await response.json();
             return result.data;
-        } catch (errors) {
-            throw new Error('failure');
+        } catch (error) {
+            return error;
         }
     };
 

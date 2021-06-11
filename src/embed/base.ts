@@ -261,7 +261,7 @@ export class TsEmbed {
             operation,
             this.thoughtSpotHost,
         );
-        newEvent.data.answerService = fetchAnswer;
+        newEvent.data.getAnswer = fetchAnswer;
         this.executeCallbacks(eventType, newEvent.data);
     }
 

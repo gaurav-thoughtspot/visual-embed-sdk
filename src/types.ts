@@ -422,4 +422,3 @@ export const OperationType = {
 export interface AnswerServiceType {
     getAnswer?: (offset: number, batchSize: number) => any;
 }
-
