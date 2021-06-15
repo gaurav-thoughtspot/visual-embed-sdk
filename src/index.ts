@@ -22,7 +22,7 @@ import {
     Action,
     EmbedConfig,
 } from './types';
-import FetchAnswers from './utils/fetchAnswers';
+import AnswerService from './utils/answerService';
 
 export {
     init,
@@ -35,7 +35,7 @@ export {
     RuntimeFilter,
     RuntimeFilterOp,
     EmbedEvent,
-    FetchAnswers,
+    AnswerService,
     HostEvent,
     DataSourceVisualMode,
     Action,

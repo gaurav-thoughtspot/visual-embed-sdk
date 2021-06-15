@@ -1,6 +1,6 @@
 import { SessionInterface, OperationType } from '../types';
 
-function FetchAnswers(
+function getAnswerServiceInstance(
     session: SessionInterface,
     query: string,
     operation: string,
@@ -25,7 +25,7 @@ function FetchAnswers(
                         query,
                         variables,
                     }),
-                    credentials: 'include'
+                    credentials: 'include',
                 },
             );
             const result = await response.json();
@@ -35,14 +35,14 @@ function FetchAnswers(
         }
     };
 
-    const getAnswer = (offset: number, batchSize: number) => {
+    const fetchData = (offset: number, batchSize: number) => {
         if (operation === OperationType.GetChartWithData) {
             variable = { batchSize, offset };
         } else {
             variable = {
                 dataPaginationParams: {
                     isClientPaginated: true,
-                    offset,
+                    offset: offset * batchSize,
                     size: batchSize,
                 },
             };
@@ -53,7 +53,9 @@ function FetchAnswers(
         });
     };
 
-    return getAnswer;
+    return {
+        fetchData,
+    };
 }
 
-export default FetchAnswers;
+export default getAnswerServiceInstance;

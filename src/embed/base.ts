@@ -32,7 +32,7 @@ import {
     uploadMixpanelEvent,
     MIXPANEL_EVENT,
 } from '../mixpanel-service';
-import FetchAnswers from '../utils/fetchAnswers';
+import AnswerService from '../utils/answerService';
 
 let config = {} as EmbedConfig;
 
@@ -255,13 +255,13 @@ export class TsEmbed {
     ) {
         const { session, query, operation } = event.data.data;
         const newEvent = event;
-        const fetchAnswer = FetchAnswers(
+        const getAnswerServiceInstance = AnswerService(
             session,
             query,
             operation,
             this.thoughtSpotHost,
         );
-        newEvent.data.getAnswer = fetchAnswer;
+        newEvent.data.AnswerService = getAnswerServiceInstance;
         this.executeCallbacks(eventType, newEvent.data);
     }
 
