@@ -235,34 +235,32 @@ export class TsEmbed {
     private subscribeToEvents() {
         window.addEventListener('message', (event) => {
             const eventType = this.getEventType(event);
-            if (
-                event.data.type === 'customAction' &&
-                [
-                    OperationType.GetChartWithData,
-                    OperationType.GetTableWithHeadlineData,
-                ].includes(event.data.data?.operation)
-            ) {
-                this.initFetchAnswerPayload(eventType, event);
-            } else if (event.source === this.iFrame.contentWindow) {
-                this.executeCallbacks(eventType, event.data);
+            if (event.source === this.iFrame.contentWindow) {
+                const data = this.processData(event.data);
+                this.executeCallbacks(eventType, data);
             }
         });
     }
 
-    private initFetchAnswerPayload(
-        eventType: EmbedEvent,
-        event: MessageEvent<any>,
-    ) {
-        const { session, query, operation } = event.data.data;
-        const newEvent = event;
-        const getAnswerServiceInstance = AnswerService(
-            session,
-            query,
-            operation,
-            this.thoughtSpotHost,
-        );
-        newEvent.data.AnswerService = getAnswerServiceInstance;
-        this.executeCallbacks(eventType, newEvent.data);
+    private processData(_data: any) {
+        const data = _data;
+        if (
+            data.type === 'customAction' &&
+            [
+                OperationType.GetChartWithData,
+                OperationType.GetTableWithHeadlineData,
+            ].includes(data.data?.operation)
+        ) {
+            const { session, query, operation } = data.data;
+            const getAnswerServiceInstance = AnswerService(
+                session,
+                query,
+                operation,
+                this.thoughtSpotHost,
+            );
+            data.AnswerService = getAnswerServiceInstance;
+        }
+        return data;
     }
 
     /**
