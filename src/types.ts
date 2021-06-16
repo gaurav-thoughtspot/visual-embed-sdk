@@ -414,11 +414,17 @@ export interface SessionInterface {
     acSession: { sessionId: string; genNo: number };
 }
 
-export const OperationType = {
-    GetChartWithData: 'GetChartWithData',
-    GetTableWithHeadlineData: 'GetTableWithHeadlineData',
-};
+// eslint-disable-next-line no-shadow
+export enum OperationType {
+    GetChartWithData = 'GetChartWithData',
+    GetTableWithHeadlineData = 'GetTableWithHeadlineData',
+}
 
 export interface AnswerServiceType {
     getAnswer?: (offset: number, batchSize: number) => any;
+}
+
+// eslint-disable-next-line no-shadow
+export enum EventType {
+    CustomAction = 'customAction',
 }

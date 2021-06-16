@@ -32,7 +32,7 @@ import {
     uploadMixpanelEvent,
     MIXPANEL_EVENT,
 } from '../mixpanel-service';
-import AnswerService from '../utils/answerService';
+import { processData } from '../utils/processData';
 
 let config = {} as EmbedConfig;
 
@@ -236,31 +236,10 @@ export class TsEmbed {
         window.addEventListener('message', (event) => {
             const eventType = this.getEventType(event);
             if (event.source === this.iFrame.contentWindow) {
-                const data = this.processData(event.data);
+                const data = processData(event.data, this.thoughtSpotHost);
                 this.executeCallbacks(eventType, data);
             }
         });
-    }
-
-    private processData(_data: any) {
-        const data = _data;
-        if (
-            data.type === 'customAction' &&
-            [
-                OperationType.GetChartWithData,
-                OperationType.GetTableWithHeadlineData,
-            ].includes(data.data?.operation)
-        ) {
-            const { session, query, operation } = data.data;
-            const getAnswerServiceInstance = AnswerService(
-                session,
-                query,
-                operation,
-                this.thoughtSpotHost,
-            );
-            data.AnswerService = getAnswerServiceInstance;
-        }
-        return data;
     }
 
     /**

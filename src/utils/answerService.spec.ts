@@ -1,6 +1,6 @@
-import AnswerService from './answerService';
+import { getAnswerServiceInstance } from './answerService';
 
-describe('AnswerService', () => {
+describe('Unit test for getAnswerServiceInstance', () => {
     const session = {
         sessionId: '',
         genNo: 2,
@@ -16,13 +16,13 @@ describe('AnswerService', () => {
                 json: () => mockAnswerResponse,
             }),
         );
-        const getAnswerServiceInstance = AnswerService(
+        const answerService = getAnswerServiceInstance(
             session,
             query,
             'GetTableWithHeadlineData',
             thoughtSpotHost,
         );
-        const answerData = await getAnswerServiceInstance.fetchData(1, 500);
+        const answerData = await answerService.fetchData(1, 500);
         expect(answerData).toStrictEqual(mockAnswerResponse.data);
         expect(answerData).not.toBeInstanceOf(Error);
         expect(fetch).toHaveBeenCalledTimes(1);
@@ -30,13 +30,13 @@ describe('AnswerService', () => {
 
     test('fetchData, when api giving error', async () => {
         global.fetch = jest.fn(() => Promise.reject(new Error('failure')));
-        const getAnswerServiceInstance = AnswerService(
+        const answerService = getAnswerServiceInstance(
             session,
             query,
             'GetChartWithData',
             thoughtSpotHost,
         );
-        const answerData = await getAnswerServiceInstance.fetchData(1, 500);
+        const answerData = await answerService.fetchData(1, 500);
         expect(answerData).toBeInstanceOf(Error);
         expect(fetch).toHaveBeenCalledTimes(1);
     });

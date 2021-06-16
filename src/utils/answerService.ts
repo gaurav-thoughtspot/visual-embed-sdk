@@ -1,6 +1,6 @@
 import { SessionInterface, OperationType } from '../types';
 
-function getAnswerServiceInstance(
+export function getAnswerServiceInstance(
     session: SessionInterface,
     query: string,
     operation: string,
@@ -57,5 +57,3 @@ function getAnswerServiceInstance(
         fetchData,
     };
 }
-
-export default getAnswerServiceInstance;
