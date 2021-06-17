@@ -423,8 +423,3 @@ export enum OperationType {
 export interface AnswerServiceType {
     getAnswer?: (offset: number, batchSize: number) => any;
 }
-
-// eslint-disable-next-line no-shadow
-export enum EventType {
-    CustomAction = 'customAction',
-}

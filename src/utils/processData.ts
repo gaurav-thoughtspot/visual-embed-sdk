@@ -1,4 +1,4 @@
-import { EventType, OperationType } from '../types';
+import { Action, OperationType } from '../types';
 import { getAnswerServiceInstance } from './answerService';
 
 export function processCustomAction(_data: any, thoughtSpotHost: string) {
@@ -23,7 +23,7 @@ export function processCustomAction(_data: any, thoughtSpotHost: string) {
 
 export function processData(data: any, thoughtSpotHost: string) {
     switch (data.type) {
-        case EventType.CustomAction:
+        case Action.CustomAction:
             return processCustomAction(data, thoughtSpotHost);
         default:
     }

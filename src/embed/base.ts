@@ -236,8 +236,10 @@ export class TsEmbed {
         window.addEventListener('message', (event) => {
             const eventType = this.getEventType(event);
             if (event.source === this.iFrame.contentWindow) {
-                const data = processData(event.data, this.thoughtSpotHost);
-                this.executeCallbacks(eventType, data);
+                this.executeCallbacks(
+                    eventType,
+                    processData(event.data, this.thoughtSpotHost),
+                );
             }
         });
     }
