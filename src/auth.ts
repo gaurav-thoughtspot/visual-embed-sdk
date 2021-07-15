@@ -1,12 +1,17 @@
 import { AuthType, EmbedConfig, EmbedEvent } from './types';
 import { appendToUrlHash } from './utils';
 
-let loggedInStatus = false;
-let samlAuthWindow: Window = null;
-let samlCompletionPromise: Promise<void> = null;
-let sessionInfo: any = null;
+// eslint-disable-next-line import/no-mutable-exports
+export let loggedInStatus = false;
+// eslint-disable-next-line import/no-mutable-exports
+export let samlAuthWindow: Window = null;
+// eslint-disable-next-line import/no-mutable-exports
+export let samlCompletionPromise: Promise<void> = null;
+// eslint-disable-next-line import/no-mutable-exports
+export let sessionInfo: any = null;
 
-const SSO_REDIRECTION_MARKER_GUID = '5e16222e-ef02-43e9-9fbd-24226bf3ce5b';
+export const SSO_REDIRECTION_MARKER_GUID =
+    '5e16222e-ef02-43e9-9fbd-24226bf3ce5b';
 
 export const EndPoints = {
     AUTH_VERIFICATION: '/callosum/v1/session/info',
