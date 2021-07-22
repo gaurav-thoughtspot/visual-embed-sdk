@@ -317,4 +317,4 @@ describe('Unit test for auth', () => {
     it('user is authenticated when loggedInStatus is true', () => {
         expect(isAuthenticated()).toBe(loggedInStatus);
     });
-})
+});
