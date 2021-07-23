@@ -7,11 +7,15 @@ import {
     doSamlAuth,
     authenticate,
     isAuthenticated,
+    samlCompletionPromise,
     SSO_REDIRECTION_MARKER_GUID,
 } from './auth';
+import * as authInstance from './auth';
 import { AuthType } from './types';
 
 const thoughtSpotHost = 'http://localhost:3000';
+const username = 'tsuser';
+const password = '12345678';
 const sessionInfoUrl = `${thoughtSpotHost}/callosum/v1/session/info`;
 const authTokenUrl = `${thoughtSpotHost}/callosum/v1/session/login/token?username=tsuser&auth_token=authToken`;
 const samalLoginUrl = `${thoughtSpotHost}/callosum/v1/saml/login?targetURLPath=%235e16222e-ef02-43e9-9fbd-24226bf3ce5b`;
@@ -19,26 +23,26 @@ const samalLoginUrl = `${thoughtSpotHost}/callosum/v1/saml/login?targetURLPath=%
 const embedConfig: any = {
     doTokenAuthSuccess: {
         thoughtSpotHost,
-        username: 'tsuser',
+        username,
         authEndpoint: 'auth',
         getAuthToken: jest.fn(() => Promise.resolve('authToken')),
     },
     doTokenAuthFailureWithoutAuthEndPoint: {
         thoughtSpotHost,
-        username: 'tsuser',
+        username,
         authEndpoint: '',
         getAuthToken: null,
     },
     doTokenAuthFailureWithoutGetAuthToken: {
         thoughtSpotHost,
-        username: 'tsuser',
+        username,
         authEndpoint: 'auth',
         getAuthToken: null,
     },
     doBasicAuth: {
         thoughtSpotHost,
-        username: 'tsuser',
-        password: '12345678',
+        username,
+        password,
     },
     doSamlAuth: {
         thoughtSpotHost,
@@ -48,36 +52,36 @@ const embedConfig: any = {
     },
     authServerFailure: {
         thoughtSpotHost,
-        username: 'tsuser',
+        username,
         authEndpoint: '',
         getAuthToken: null,
         authType: AuthType.AuthServer,
     },
     basicAuthSuccess: {
         thoughtSpotHost,
-        username: 'tsuser',
-        password: '12345678',
+        username,
+        password,
         authType: AuthType.Basic,
     },
     nonAuthSucess: {
         thoughtSpotHost,
-        username: 'tsuser',
-        password: '12345678',
+        username,
+        password,
         authType: AuthType.None,
     },
 };
 
-describe('Unit test for auth', () => {
-    const originalWindow = window;
-    const mockSessionInfo = {
-        sessionId: '6588e7d9-710c-453e-a7b4-535fb3a8cbb2',
-        genNo: 3,
-        acSession: {
-            sessionId: 'cb202c48-b14b-4466-8a70-899ea666d46q',
-            genNo: 5,
-        },
-    };
+const originalWindow = window;
+const mockSessionInfo = {
+    sessionId: '6588e7d9-710c-453e-a7b4-535fb3a8cbb2',
+    genNo: 3,
+    acSession: {
+        sessionId: 'cb202c48-b14b-4466-8a70-899ea666d46q',
+        genNo: 5,
+    },
+};
 
+describe('Unit test for auth', () => {
     beforeEach(() => {
         global.fetch = window.fetch;
     });
@@ -118,12 +122,9 @@ describe('Unit test for auth', () => {
     });
 
     test('doTokenAuth: when user is loggedIn', async () => {
-        global.fetch = jest.fn(async (param) => {
-            if (param === sessionInfoUrl) {
-                return Promise.resolve({ status: 200, json: () => true });
-            }
-            return Promise.reject();
-        });
+        global.fetch = jest.fn(async (param) =>
+            Promise.resolve({ status: 200, json: () => true }),
+        );
         await doTokenAuth(embedConfig.doTokenAuthSuccess);
         expect(loggedInStatus).toBe(true);
     });
@@ -162,12 +163,9 @@ describe('Unit test for auth', () => {
         });
 
         it('when user is loggedIn', async () => {
-            global.fetch = jest.fn(async (param) => {
-                if (param === sessionInfoUrl) {
-                    return Promise.resolve({ status: 200, json: () => true });
-                }
-                return Promise.reject();
-            });
+            global.fetch = jest.fn(async (param) =>
+                Promise.resolve({ status: 200, json: () => true }),
+            );
             await doBasicAuth(embedConfig.doBasicAuth);
             expect(window.fetch).toBeCalled();
             expect(loggedInStatus).toBe(true);
@@ -234,14 +232,28 @@ describe('Unit test for auth', () => {
             expect(global.window.location.href).toBe(samalLoginUrl);
         });
 
-        // it.skip('when user is not loggedIn, in config noRedirect is true and isAtSSORedirectUrl is false', async () => {
-        //     expect(
-        //         await doSamlAuth({
-        //             ...embedConfig,
-        //             noRedirect: true,
-        //         }),
-        //     ).toBe(undefined);
-        // });
+        it('when user is not loggedIn, in config noRedirect is true and isAtSSORedirectUrl is false', async () => {
+            Object.defineProperty(window, 'location', {
+                value: {
+                    href: '',
+                    hash: '',
+                },
+            });
+            spyOn(authInstance, 'samlCompletionPromise');
+            global.fetch = jest.fn(async (param) => {
+                if (param === sessionInfoUrl) {
+                    return Promise.resolve(true);
+                }
+                return Promise.reject();
+            });
+            expect(await samlCompletionPromise).not.toBe(null);
+            expect(
+                await doSamlAuth({
+                    ...embedConfig.doSamlAuth,
+                    noRedirect: true,
+                }),
+            ).toBe(undefined);
+        });
     });
 
     it('authenticate: when authType is SSO', async () => {
