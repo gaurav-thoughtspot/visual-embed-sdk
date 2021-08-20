@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 /**
  * Copyright (c) 2021
  *
@@ -37,7 +38,7 @@ import { version } from '../../package.json';
 
 let config = {} as EmbedConfig;
 
-let authPromise: Promise<void>;
+export let authPromise: Promise<void>;
 
 /**
  * The event id map from v2 event names to v1 event id
