@@ -98,7 +98,7 @@ describe('Base TS Embed', () => {
                 'uploadMixpanelEvent',
             );
             Object.defineProperty(baseInstance, 'authPromise', {
-                value: Promise.reject({ error: true }),
+                value: Promise.reject(),
             });
             const tsEmbed = new SearchEmbed(getRootEl(), {});
             const iFrame: any = document.createElement('div');
