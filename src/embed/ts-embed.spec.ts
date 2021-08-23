@@ -57,7 +57,7 @@ describe('Unit test case for ts embed', () => {
             tsEmbed.render();
         });
 
-        test('mixpanel should called with VISUAL_SDK_RENDER_COMPLETE', () => {
+        test('mixpanel should call with VISUAL_SDK_RENDER_COMPLETE', () => {
             expect(mockMixPanelEvent).toBeCalledWith(
                 MIXPANEL_EVENT.VISUAL_SDK_RENDER_START,
             );
@@ -88,7 +88,7 @@ describe('Unit test case for ts embed', () => {
             tsEmbed.render();
         });
 
-        test('mixpanel should called with VISUAL_SDK_RENDER_FAILED', () => {
+        test('mixpanel should call with VISUAL_SDK_RENDER_FAILED', () => {
             expect(mockMixPanelEvent).toBeCalledWith(
                 MIXPANEL_EVENT.VISUAL_SDK_RENDER_START,
             );
