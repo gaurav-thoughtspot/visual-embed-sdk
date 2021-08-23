@@ -19,7 +19,7 @@ export let authPromise: Promise<void>;
 /**
  * Perform authentication on the ThoughtSpot app as applicable.
  */
-export const handleAuth = () => {
+export const handleAuth = (): void => {
     const authConfig = {
         ...config,
         thoughtSpotHost: getThoughtSpotHost(config),
@@ -29,7 +29,7 @@ export const handleAuth = () => {
 
 export const getEmbedConfig = (): EmbedConfig => config;
 
-export const getAuthPromise = () => authPromise;
+export const getAuthPromise = (): Promise<void> => authPromise;
 
 /**
  * Initialize the ThoughtSpot embed settings globally and perform
