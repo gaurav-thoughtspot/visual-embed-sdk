@@ -1,4 +1,3 @@
-/* eslint-disable import/no-mutable-exports */
 /**
  * Copyright (c) 2021
  *
@@ -14,7 +13,7 @@ import { uploadMixpanelEvent, MIXPANEL_EVENT } from '../mixpanel-service';
 
 let config = {} as EmbedConfig;
 
-export let authPromise: Promise<void>;
+let authPromise: Promise<void>;
 
 /**
  * Perform authentication on the ThoughtSpot app as applicable.
