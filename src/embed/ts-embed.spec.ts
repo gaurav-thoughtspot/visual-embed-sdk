@@ -1,11 +1,19 @@
 /* eslint-disable dot-notation */
-import { AuthType, init, EmbedEvent, SearchEmbed } from '../index';
-import { getDocumentBody, getRootEl } from '../test/test-utils';
+import {
+    AuthType,
+    init,
+    EmbedEvent,
+    SearchEmbed,
+    PinboardEmbed,
+    AppEmbed,
+} from '../index';
+import { getDocumentBody, getIFrameSrc, getRootEl } from '../test/test-utils';
 import * as config from '../config';
 import * as tsEmbedInstance from './ts-embed';
 import * as mixpanelInstance from '../mixpanel-service';
 import * as baseInstance from './base';
 import { MIXPANEL_EVENT } from '../mixpanel-service';
+import { version } from '../../package.json';
 
 const defaultViewConfig = {
     frameParams: {
@@ -13,6 +21,9 @@ const defaultViewConfig = {
         height: 720,
     },
 };
+const thoughtSpotHost = 'tshost';
+const defaultParamsForSearchEmbed = `hostAppUrl=localhost&viewPortHeight=768&viewPortWidth=1024&sdkVersion=${version}&dataSourceMode=expand&useLastSelectedSources=false`;
+const defaultParamsForPinboardEmbed = `hostAppUrl=localhost&viewPortHeight=768&viewPortWidth=1024&sdkVersion=${version}`;
 
 describe('Unit test case for ts embed', () => {
     const mockMixPanelEvent = jest.spyOn(
@@ -22,7 +33,7 @@ describe('Unit test case for ts embed', () => {
     describe('when thoughtSpotHost have value and authPromise return success response', () => {
         beforeAll(() => {
             init({
-                thoughtSpotHost: 'tshost',
+                thoughtSpotHost,
                 authType: AuthType.None,
             });
         });
@@ -130,6 +141,59 @@ describe('Unit test case for ts embed', () => {
             viEmbedIns.render();
             viEmbedIns.on(EmbedEvent.CustomAction, jest.fn()).render();
             expect(viEmbedIns['isError']).toBe(true);
+        });
+    });
+
+    describe('Naviage to Page API', () => {
+        beforeEach(() => {
+            jest.spyOn(config, 'getThoughtSpotHost').mockImplementation(
+                () => 'http://tshost',
+            );
+        });
+
+        test('when app is PinboardEmbed after navigateToPage function call, new path should be set to iframe', async () => {
+            const path = 'pinboard/e0836cad-4fdf-42d4-bd97-567a6b2a6058';
+            const pinboardEmbed = new PinboardEmbed(getRootEl(), {
+                pinboardId: '123',
+            });
+            await pinboardEmbed.render();
+            pinboardEmbed.navigateToPage(
+                'pinboard/e0836cad-4fdf-42d4-bd97-567a6b2a6058',
+            );
+            expect(getIFrameSrc()).toBe(
+                `http://${thoughtSpotHost}/?embedApp=true&${defaultParamsForPinboardEmbed}#/embed/${path}`,
+            );
+        });
+
+        test('when app is SearchEmbed after navigateToPage function call, new path should be set to iframe', async () => {
+            const path = 'saved-answer/204204be-7bcb-4099-b6af-93840f8c1a0c';
+            const searchEmbed = new SearchEmbed(getRootEl(), {
+                ...defaultViewConfig,
+            });
+            await searchEmbed.render();
+            searchEmbed.navigateToPage(
+                'saved-answer/204204be-7bcb-4099-b6af-93840f8c1a0c',
+            );
+            expect(getIFrameSrc()).toBe(
+                `http://${thoughtSpotHost}/v2/?${defaultParamsForSearchEmbed}#/embed/${path}`,
+            );
+        });
+
+        test('when app is AppEmbed after navigateToPage function call, new path should be set to iframe', async () => {
+            const path = 'pinboard/e0836cad-4fdf-42d4-bd97-567a6b2a6058';
+            const pinboardEmbed = new AppEmbed(getRootEl(), {
+                frameParams: {
+                    width: '100%',
+                    height: '100%',
+                },
+            });
+            await pinboardEmbed.render();
+            pinboardEmbed.navigateToPage(
+                'pinboard/e0836cad-4fdf-42d4-bd97-567a6b2a6058',
+            );
+            expect(getIFrameSrc()).toBe(
+                `http://${thoughtSpotHost}/?embedApp=true&primaryNavHidden=true&profileAndHelpInNavBarHidden=false&${defaultParamsForPinboardEmbed}#/${path}`,
+            );
         });
     });
 });
