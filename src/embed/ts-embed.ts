@@ -276,9 +276,17 @@ export class TsEmbed {
      */
     protected getBaseQueryParams() {
         const queryParams = {};
-        queryParams[Param.HostAppUrl] = encodeURIComponent(
-            window?.location?.host || '',
-        );
+        let hostAppUrl = window?.location?.host || '';
+
+        // The below check is needed because TS Cloud firewall, blocks localhost/127.0.0.1
+        // in any url param.
+        if (
+            hostAppUrl.includes('localhost') ||
+            hostAppUrl.includes('127.0.0.1')
+        ) {
+            hostAppUrl = 'local-host';
+        }
+        queryParams[Param.HostAppUrl] = encodeURIComponent(hostAppUrl);
         queryParams[Param.ViewPortHeight] = window.innerHeight;
         queryParams[Param.ViewPortWidth] = window.innerWidth;
         queryParams[Param.Version] = version;
@@ -510,12 +518,16 @@ export class TsEmbed {
      * eg: appEmbed.navigateToPage('pinboards')
      */
     public navigateToPage(path: string): void {
-        const iframeSrc = this.iFrame.src;
-        const embedPath = '#/embed';
-        const currentPath = iframeSrc.includes(embedPath) ? embedPath : '#';
-        this.iFrame.src = `${
-            iframeSrc.split(currentPath)[0]
-        }${currentPath}/${path.replace(/^\/?#?\//, '')}`;
+        const iframeSrc = this.iFrame?.src;
+        if (iframeSrc) {
+            const embedPath = '#/embed';
+            const currentPath = iframeSrc.includes(embedPath) ? embedPath : '#';
+            this.iFrame.src = `${
+                iframeSrc.split(currentPath)[0]
+            }${currentPath}/${path.replace(/^\/?#?\//, '')}`;
+        } else {
+            console.log('Please call render before invoking this method');
+        }
     }
 
     /**

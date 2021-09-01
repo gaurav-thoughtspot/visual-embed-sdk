@@ -31,11 +31,11 @@ describe('React Components', () => {
             await waitFor(() => getIFrameEl(container));
 
             expect(getIFrameSrc(container)).toBe(
-                `http://${thoughtSpotHost}/?hostAppUrl=localhost&viewPortHeight=768&viewPortWidth=1024&sdkVersion=${version}&dataSourceMode=hide&useLastSelectedSources=false#/embed/answer`,
+                `http://${thoughtSpotHost}/?hostAppUrl=local-host&viewPortHeight=768&viewPortWidth=1024&sdkVersion=${version}&dataSourceMode=hide&useLastSelectedSources=false#/embed/answer`,
             );
         });
 
-        it('Should attach event listeners', async (done) => {
+        it('Should attach event listeners', async () => {
             const userGUID = 'absfdfgd';
             const { container } = render(
                 <SearchEmbed
@@ -44,7 +44,6 @@ describe('React Components', () => {
                     }}
                     onAuthInit={(e) => {
                         expect(e.data.userGUID).toEqual(userGUID);
-                        done();
                     }}
                 />,
             );
