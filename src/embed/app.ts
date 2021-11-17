@@ -180,12 +180,16 @@ export class AppEmbed extends V1Embed {
      * eg: appEmbed.navigateToPage('pinboards')
      */
     public navigateToPage(path: string): void {
-        const iframeSrc = this.iFrame.src;
-        const embedPath = '#/embed';
-        const currentPath = iframeSrc.includes(embedPath) ? embedPath : '#';
-        this.iFrame.src = `${
-            iframeSrc.split(currentPath)[0]
-        }${currentPath}/${path.replace(/^\/?#?\//, '')}`;
+        if (this.iFrame) {
+            const iframeSrc = this.iFrame.src;
+            const embedPath = '#/embed';
+            const currentPath = iframeSrc.includes(embedPath) ? embedPath : '#';
+            this.iFrame.src = `${
+                iframeSrc.split(currentPath)[0]
+            }${currentPath}/${path.replace(/^\/?#?\//, '')}`;
+        } else {
+            console.log('Please call render before invoking this method');
+        }
     }
 
     /**
