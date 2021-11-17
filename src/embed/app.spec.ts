@@ -167,4 +167,23 @@ describe('App embed tests', () => {
             );
         });
     });
+
+    test('navigateToPage: route navigate to pinboards', async () => {
+        const appEmbed = new AppEmbed(getRootEl(), {
+            ...defaultViewConfig,
+            showPrimaryNavbar: false,
+            tag: 'Finance',
+        } as AppViewConfig);
+
+        appEmbed.render();
+        await executeAfterWait(() => {
+            expect(getIFrameSrc()).toBe(
+                `http://${thoughtSpotHost}/?embedApp=true&primaryNavHidden=true&profileAndHelpInNavBarHidden=false${defaultParams}&tag=Finance#/home`,
+            );
+            appEmbed.navigateToPage('pinboards');
+            expect(getIFrameSrc()).toBe(
+                `http://${thoughtSpotHost}/?embedApp=true&primaryNavHidden=true&profileAndHelpInNavBarHidden=false${defaultParams}&tag=Finance#/pinboards`,
+            );
+        });
+    });
 });
