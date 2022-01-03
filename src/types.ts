@@ -462,8 +462,13 @@ export enum Action {
     PinboardSnapshot = 'pinboardSnapshot',
     LiveboardSnapshot = 'liveboardSnapshot', // update-TSCB
     ResetLayout = 'resetLayout',
+    /**
+     * @version 1.7.0
+     */
     AddToFavorites = 'addToFavorites',
     EditDetails = 'editDetails',
+    LiveboardUsers = 'liveboardUsers',
+
     Schedule = 'schedule',
     SchedulesList = 'schedule-list',
     Share = 'share',
